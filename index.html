@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Тренажер устного экзамена</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Юниты">
+        <div class="brand">
+          <div class="brand-mark">FR</div>
+          <div>
+            <h1>Устный тренажер</h1>
+            <p>Édito A2 · юниты 7-12</p>
+          </div>
+        </div>
+
+        <div class="level-card">
+          <span>Устная тренировка</span>
+          <strong id="dailyScore">0 XP</strong>
+          <div class="progress-track">
+            <div id="dailyProgress" class="progress-fill"></div>
+          </div>
+        </div>
+
+        <div class="share-note">
+          <strong>Для группы</strong>
+          <span>Прогресс сохраняется отдельно у каждого в браузере.</span>
+        </div>
+
+        <nav id="moduleList" class="module-list"></nav>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">подготовка к устному экзамену</p>
+            <h2 id="moduleTitle">Nouvelles vies</h2>
+          </div>
+          <div class="actions">
+            <div class="mode-tabs" role="tablist" aria-label="Режим">
+              <button class="mode-tab active" data-view="tickets">Билеты</button>
+              <button class="mode-tab" data-view="cards">Карточки</button>
+              <button class="mode-tab" data-view="builder">Создать курс</button>
+            </div>
+            <button id="shuffleBtn" class="text-button" title="Следующий билет" aria-label="Следующий билет">Следующий</button>
+            <button id="resetBtn" class="text-button">Сброс</button>
+          </div>
+        </header>
+
+        <section id="ticketsView" class="view-section active">
+        <section class="hero-panel">
+          <div class="hero-copy">
+            <span id="moduleMeta" class="pill">Юнит 7 · стр. 97</span>
+            <h3 id="ticketQuestion">Racontez votre parcours.</h3>
+            <p id="ticketGoal">Используй слова из учебника и говори вслух.</p>
+          </div>
+          <div class="speaking-ring">
+            <svg viewBox="0 0 120 120" role="img" aria-label="Timer">
+              <circle cx="60" cy="60" r="52" class="ring-bg"></circle>
+              <circle id="timerRing" cx="60" cy="60" r="52" class="ring-fg"></circle>
+            </svg>
+            <div class="timer-face">
+              <strong id="timerValue">45</strong>
+              <span>сек</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="practice-grid">
+          <article class="panel prompt-panel">
+            <div class="panel-head">
+              <h3>Пример устного ответа</h3>
+              <div class="segmented" role="tablist" aria-label="Сложность">
+                <button class="seg active" data-level="easy">Проще</button>
+                <button class="seg" data-level="medium">Нормально</button>
+                <button class="seg" data-level="challenge">Сложнее</button>
+              </div>
+            </div>
+            <button id="hideAnswerBtn" class="ghost-button">Скрыть пример</button>
+            <p id="modelAnswer" class="model-answer"></p>
+            <div id="ticketPlan" class="ticket-plan"></div>
+            <div class="speak-controls">
+              <button id="startTimerBtn" class="primary-button">Начать говорить</button>
+              <button id="doneBtn" class="secondary-button">Получилось</button>
+              <button id="hardBtn" class="secondary-button">Сложно</button>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <h3>Словарь из учебника</h3>
+              <span id="vocabCount" class="counter">0</span>
+            </div>
+            <div id="vocabChips" class="chips"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <h3>Мой ответ</h3>
+              <button id="copyBuilderBtn" class="text-button small-copy" title="Копировать" aria-label="Копировать">Копировать</button>
+            </div>
+            <textarea id="builder" rows="7" placeholder="Собери свой ответ здесь, потом проговори вслух..."></textarea>
+            <div id="coverage" class="coverage"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <h3>Что тренировать</h3>
+              <span class="pill soft">устно</span>
+            </div>
+            <div id="drillList" class="drill-list"></div>
+          </article>
+        </section>
+        </section>
+
+        <section id="cardsView" class="view-section">
+          <div class="cards-layout">
+            <article class="panel cards-trainer">
+              <div class="panel-head">
+                <h3>Тренировка карточек</h3>
+                <span id="cardProgress" class="pill soft">1 / 1</span>
+              </div>
+              <button id="flashcard" class="flashcard large" type="button">
+                <span id="cardLabel">Французский</span>
+                <strong id="cardFront">le sommeil</strong>
+                <span id="cardBack">сон</span>
+              </button>
+              <div class="card-controls three">
+                <button id="wrongCardBtn" class="danger-button">Не знаю</button>
+                <button id="flipCardBtn" class="secondary-button">Перевернуть</button>
+                <button id="knownCardBtn" class="primary-button">Знаю</button>
+              </div>
+              <button id="nextCardBtn" class="text-button wide-button">Следующая без оценки</button>
+            </article>
+
+            <aside class="cards-side">
+              <article class="panel">
+                <div class="panel-head">
+                  <h3>Прогресс слов</h3>
+                  <span id="knownPercent" class="counter">0%</span>
+                </div>
+                <div class="stats-grid">
+                  <div><strong id="knownCount">0</strong><span>знаю</span></div>
+                  <div><strong id="wrongCount">0</strong><span>ошибки</span></div>
+                  <div><strong id="untouchedCount">0</strong><span>не трогал</span></div>
+                </div>
+              </article>
+
+              <article class="panel">
+                <div class="panel-head">
+                  <h3>Слабые слова</h3>
+                  <span class="pill soft">повтори</span>
+                </div>
+                <div id="weakWords" class="weak-list"></div>
+              </article>
+            </aside>
+          </div>
+        </section>
+
+        <section id="builderView" class="view-section">
+          <div class="builder-layout">
+            <article class="panel">
+              <div class="panel-head">
+                <h3>Создать курс из учебника</h3>
+                <span class="pill soft">черновик</span>
+              </div>
+              <div class="upload-box">
+                <label>
+                  <span>Название курса</span>
+                  <input id="courseTitleInput" type="text" value="Мой курс" />
+                </label>
+                <label>
+                  <span>Файл с текстом</span>
+                  <input id="courseFileInput" type="file" accept=".txt,.md,.csv" />
+                </label>
+                <label>
+                  <span>Или вставь текст словаря</span>
+                  <textarea id="courseTextInput" rows="12" placeholder="Например:
+Les parties du corps
+• le bras
+• le cerveau
+• la cheville
+
+Le sommeil
+• le réveil
+• s'endormir"></textarea>
+                </label>
+                <button id="generateCourseBtn" class="primary-button">Собрать черновик курса</button>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <h3>Предпросмотр</h3>
+                <span id="generatedCount" class="counter">0</span>
+              </div>
+              <div id="generatedPreview" class="generated-preview">
+                <p class="empty-note">Загрузи файл или вставь текст. Я найду группы и слова.</p>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
