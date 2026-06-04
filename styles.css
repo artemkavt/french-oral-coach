@@ -145,6 +145,42 @@ button {
   line-height: 1.35;
 }
 
+.coverage-card {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  margin-bottom: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.coverage-card > strong {
+  font-size: 13px;
+}
+
+.coverage-list {
+  display: grid;
+  gap: 6px;
+}
+
+.coverage-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: 7px;
+  background: #f4f7f7;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.coverage-item.active {
+  background: #e8f8ea;
+  color: var(--green-dark);
+}
+
 .module-list {
   display: grid;
   gap: 8px;
