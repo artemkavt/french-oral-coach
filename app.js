@@ -499,9 +499,334 @@ modules.forEach((module) => {
   }
 });
 
-const activeModules = modules.filter((module) => module.id >= 7);
-const savedModuleId = Number(localStorage.getItem("moduleId"));
-const initialModuleId = activeModules.some((module) => module.id === savedModuleId) ? savedModuleId : 7;
+const examTickets = [
+  {
+    id: "ticket-1",
+    number: 1,
+    title: "Les nouvelles technologies",
+    page: "билет 1",
+    topic: "будущее, технологии, полезные предметы",
+    vocabGroups: [
+      { title: "Технологии", words: ["la technologie", "l'innovation (f.)", "l'invention (f.)", "le robot", "l'intelligence artificielle (f.)", "le logiciel", "l'imprimante 3D (f.)", "la tablette"] },
+      { title: "Предметы", words: ["l'appareil (m.)", "le smartphone", "la batterie", "l'écran (m.)", "le clavier", "la souris", "l'ordinateur", "l'application (f.)"] },
+      { title: "Описание", words: ["utile", "pratique", "indispensable", "automatique", "autonome", "fonctionner", "être en panne", "tomber en panne"] }
+    ],
+    tickets: [
+      {
+        title: "Билет 1 · Технологии будущего",
+        question: "Les nouvelles technologies. Dans le futur: imaginer l'avenir, décrire l'utilité des objets.",
+        goal: "Расскажи про технологии будущего и объясни, зачем они нужны.",
+        required: ["la technologie", "l'innovation (f.)", "le robot", "utile", "pratique", "le smartphone", "l'intelligence artificielle (f.)"],
+        plan: ["Сказать общее мнение", "Назвать 2-3 технологии", "Объяснить пользу", "Добавить личный пример"],
+        answers: {
+          easy: "À mon avis, les nouvelles technologies sont très utiles. Dans le futur, il y aura plus de robots et d'intelligence artificielle. Le smartphone restera indispensable parce qu'il aide à communiquer et à chercher des informations.",
+          medium: "Je pense que les nouvelles technologies vont changer la vie quotidienne. Par exemple, les robots, les applications et l'intelligence artificielle seront plus pratiques. Ces objets seront utiles pour travailler, apprendre et gagner du temps.",
+          challenge: "Dans le futur, les innovations technologiques seront partout. Un robot pourra aider à la maison, une application pourra organiser la journée et l'intelligence artificielle pourra transmettre des connaissances. Mais il faudra utiliser ces objets avec équilibre, parce que la technologie doit aider les personnes, pas remplacer les relations humaines."
+        }
+      }
+    ],
+    drills: [["Opinion", "Commence par: À mon avis..."], ["Futur", "Utilise: il y aura, on pourra, ce sera."], ["Objet", "Choisis un objet et explique son utilité."]]
+  },
+  {
+    id: "ticket-2",
+    number: 2,
+    title: "La santé",
+    page: "билет 2",
+    topic: "здоровье, медицина, мнение",
+    vocabGroups: [
+      { title: "État de santé", words: ["être en pleine forme", "être patraque", "la fatigue physique", "le stress", "l'anxiété (f.)", "la fièvre"] },
+      { title: "Médecine", words: ["consulter un/une médecin", "le traitement", "le remède", "l'antibiotique (m.)", "calmer une douleur", "se soigner"] },
+      { title: "Bonnes habitudes", words: ["adopter de bonnes habitudes", "le repos", "récupérer", "la respiration", "relâcher ses muscles", "faire le plus grand bien"] }
+    ],
+    tickets: [
+      {
+        title: "Билет 2 · Здоровье и медицина",
+        question: "La santé, les types de médecine. Exprimer son point de vue.",
+        goal: "Вырази мнение: как заботиться о здоровье и когда идти к врачу.",
+        required: ["être en pleine forme", "adopter de bonnes habitudes", "consulter un/une médecin", "le traitement", "le repos", "récupérer"],
+        plan: ["Сказать мнение", "Назвать хорошие привычки", "Сказать про врача", "Завершить советом"],
+        answers: {
+          easy: "Pour être en pleine forme, il faut adopter de bonnes habitudes. Il faut dormir, se reposer et manger normalement. Si on est malade, il faut consulter un médecin et suivre un traitement.",
+          medium: "À mon avis, la santé dépend des habitudes de tous les jours. Le repos, la respiration calme et le sport aident à récupérer. Mais si on a de la fièvre ou une douleur forte, il vaut mieux consulter un médecin.",
+          challenge: "Je pense que la médecine est importante, mais les habitudes personnelles comptent aussi. Pour rester en pleine forme, il faut dormir assez, éviter le stress et prendre le temps de récupérer. Quand un problème continue, il ne faut pas attendre: on doit consulter un médecin et choisir un traitement adapté."
+        }
+      }
+    ],
+    drills: [["Point de vue", "Utilise: je pense que, à mon avis."], ["Conseils", "Donne trois conseils avec il faut."], ["Exemple", "Ajoute une situation personnelle simple."]]
+  },
+  {
+    id: "ticket-3",
+    number: 3,
+    title: "À la pharmacie",
+    page: "билет 3",
+    topic: "аптека, симптомы, совет",
+    vocabGroups: [
+      { title: "Symptômes", words: ["être patraque", "la fièvre", "la toux", "le nez bouché", "le mal de gorge", "le rhume", "la migraine"] },
+      { title: "Remèdes", words: ["le sirop", "les gouttes (f.)", "le remède", "l'antiseptique (m.)", "calmer une douleur", "le traitement"] }
+    ],
+    tickets: [
+      {
+        title: "Билет 3 · В аптеке",
+        question: "À la pharmacie. Parler des problèmes de santé.",
+        goal: "Сыграй мини-диалог: симптомы + просьба о лекарстве.",
+        required: ["être patraque", "la fièvre", "la toux", "le nez bouché", "le sirop", "les gouttes (f.)"],
+        plan: ["Поздороваться", "Назвать симптомы", "Попросить средство", "Сказать спасибо"],
+        answers: {
+          easy: "Bonjour madame. Je suis patraque. J'ai le nez bouché, je tousse et j'ai un peu de fièvre. Est-ce que vous pouvez me conseiller un sirop ou des gouttes ? Merci beaucoup.",
+          medium: "Bonjour, je ne me sens pas bien depuis deux jours. J'ai mal à la gorge, le nez bouché et de la toux. Je voudrais un remède simple pour calmer la douleur. Vous me conseillez un sirop ?",
+          challenge: "Bonjour madame, je viens vous demander conseil. Je suis patraque: j'ai de la fièvre, le nez bouché, une toux forte et mal à la gorge. Je voudrais un traitement léger, par exemple un sirop ou des gouttes. Si cela ne passe pas, je consulterai un médecin."
+        }
+      }
+    ],
+    drills: [["Dialogue", "Fais pharmacien + client."], ["Symptômes", "Nomme trois symptômes."], ["Demande", "Utilise: Est-ce que vous pouvez me conseiller...?"]]
+  },
+  {
+    id: "ticket-4",
+    number: 4,
+    title: "Chez le médecin",
+    page: "билет 4",
+    topic: "врач, боль, части тела",
+    vocabGroups: [
+      { title: "Corps", words: ["la tête", "le cou", "le dos", "le ventre", "l'épaule (f.)", "le genou", "la jambe"] },
+      { title: "Douleur", words: ["avoir mal", "la courbature", "souffrir", "soulager", "la tension"] },
+      { title: "Soins", words: ["consulter un/une médecin", "le traitement", "le remède", "calmer une douleur"] }
+    ],
+    tickets: [
+      {
+        title: "Билет 4 · У врача",
+        question: "Chez le médecin. Parler des problèmes de santé.",
+        goal: "Объясни врачу, что болит и как давно.",
+        required: ["avoir mal", "le dos", "le cou", "la tête", "souffrir", "soulager", "le traitement"],
+        plan: ["Сказать причину визита", "Где болит", "Как давно", "Спросить про лечение"],
+        answers: {
+          easy: "Bonjour docteur. J'ai mal au dos et au cou. Je souffre depuis deux jours. Je voudrais savoir comment calmer la douleur et quel traitement je dois prendre.",
+          medium: "Bonjour docteur, je viens parce que j'ai mal à la tête, au dos et au cou. La douleur n'est pas très forte, mais elle me fatigue. Est-ce que vous pouvez me conseiller un traitement pour soulager la tension ?",
+          challenge: "Bonjour docteur. Depuis quelques jours, je souffre d'une douleur dans le dos et dans le cou. J'ai aussi parfois mal à la tête. Je pense que c'est peut-être à cause du stress ou d'une mauvaise position. Je voudrais un conseil pour soulager la douleur et éviter que cela recommence."
+        }
+      }
+    ],
+    drills: [["Corps", "Montre/nomme les parties du corps."], ["Temps", "Utilise: depuis hier, depuis deux jours."], ["Question", "Pose une question au médecin."]]
+  },
+  {
+    id: "ticket-5",
+    number: 5,
+    title: "Les urgences",
+    page: "билет 5",
+    topic: "срочная помощь, службы, проблемы",
+    vocabGroups: [
+      { title: "Urgences", words: ["l'accident (m.)", "la victime", "le/la blessé(e)", "le numéro d'urgence", "l'appel (m.)", "l'ambulance (f.)", "le SAMU", "le pompier"] },
+      { title: "Problèmes", words: ["la fièvre", "l'infection (f.)", "l'asthme (m.)", "la migraine", "le stress", "la toux"] }
+    ],
+    tickets: [
+      {
+        title: "Билет 5 · Срочная помощь",
+        question: "Les urgences : les services, les maux, problèmes de santé.",
+        goal: "Объясни, что делать при срочной медицинской ситуации.",
+        required: ["le numéro d'urgence", "l'appel (m.)", "l'ambulance (f.)", "le SAMU", "la victime", "le/la blessé(e)"],
+        plan: ["Назвать ситуацию", "Позвонить", "Описать человека", "Ждать помощь"],
+        answers: {
+          easy: "En cas d'urgence, il faut appeler le numéro d'urgence. Pendant l'appel, il faut expliquer où est la victime. Ensuite, l'ambulance ou le SAMU arrive pour aider le blessé.",
+          medium: "Si une personne a un problème grave, il faut rester calme et appeler les urgences. On donne l'adresse, on explique les symptômes et on dit s'il y a un blessé. Après, le SAMU ou les pompiers peuvent intervenir.",
+          challenge: "À mon avis, dans une urgence, il faut agir vite mais calmement. On appelle le numéro d'urgence, on décrit la situation, l'adresse et l'état de la victime. Il ne faut pas déplacer un blessé si ce n'est pas nécessaire. Ensuite, l'ambulance, le SAMU ou les pompiers arrivent."
+        }
+      }
+    ],
+    drills: [["Urgence", "Dis qui tu appelles."], ["Adresse", "Ajoute: l'adresse exacte."], ["Calme", "Utilise: il faut rester calme."]]
+  },
+  {
+    id: "ticket-6",
+    number: 6,
+    title: "Un accident",
+    page: "билет 6",
+    topic: "авария, транспорт, боль",
+    vocabGroups: [
+      { title: "Accident", words: ["l'accident (m.)", "la victime", "le/la blessé(e)", "le policier", "la policière", "le pompier", "la pompière", "l'ambulance (f.)"] },
+      { title: "Douleur", words: ["avoir mal", "la courbature", "souffrir", "soulager", "la tension", "le dos", "la jambe"] },
+      { title: "Voyage", words: ["les transports", "le départ", "l'arrivée (f.)", "la direction", "les bagages (m.)"] }
+    ],
+    tickets: [
+      {
+        title: "Билет 6 · Несчастный случай",
+        question: "Un accident : les services, les transports, les maux, les problèmes.",
+        goal: "Опиши аварию и какие службы помогают.",
+        required: ["l'accident (m.)", "la victime", "l'ambulance (f.)", "le pompier", "le policier", "avoir mal"],
+        plan: ["Что произошло", "Кто пострадал", "Какие службы приехали", "Что делать дальше"],
+        answers: {
+          easy: "J'ai vu un accident dans la rue. Une victime avait mal à la jambe. J'ai appelé les urgences. L'ambulance, les pompiers et la police sont arrivés rapidement.",
+          medium: "Un accident peut arriver dans les transports ou dans la rue. Si une personne est blessée, il faut appeler les urgences. Les pompiers aident la victime, l'ambulance l'emmène à l'hôpital et la police organise la circulation.",
+          challenge: "Si je vois un accident, je garde mon calme. D'abord, je regarde si la victime est blessée et si elle a mal quelque part. Ensuite, j'appelle les urgences et je donne l'adresse. Les pompiers, la police et l'ambulance peuvent intervenir pour protéger les personnes et soulager les blessés."
+        }
+      }
+    ],
+    drills: [["Récit", "Raconte au passé composé."], ["Services", "Nomme ambulance, police, pompiers."], ["Douleur", "Ajoute une partie du corps."]]
+  },
+  {
+    id: "ticket-7",
+    number: 7,
+    title: "La restauration",
+    page: "билет 7",
+    topic: "рестораны, блюда, еда",
+    vocabGroups: [
+      { title: "Lieux", words: ["le bistrot", "la brasserie", "le fast-food", "le restaurant gastronomique", "le restaurant végan", "le traiteur"] },
+      { title: "Au restaurant", words: ["commander des plats", "sur place", "à emporter", "le serveur", "la serveuse", "le service", "le pourboire"] },
+      { title: "Plats et goûts", words: ["les crêpes (f.)", "la ratatouille", "le couscous", "le fondant au chocolat", "épicé(e)", "salé(e)", "sucré(e)", "se régaler"] }
+    ],
+    tickets: [
+      {
+        title: "Билет 7 · Ресторан и еда",
+        question: "La restauration, les types de restauration, les plats, les aliments: exprimer son intérêt, ses connaissances.",
+        goal: "Расскажи, какие рестораны и блюда тебе нравятся.",
+        required: ["le restaurant gastronomique", "commander des plats", "le serveur", "la ratatouille", "les crêpes (f.)", "se régaler"],
+        plan: ["Назвать тип ресторана", "Назвать блюда", "Описать вкус", "Сказать мнение"],
+        answers: {
+          easy: "J'aime aller au restaurant avec mes amis. Je peux commander des crêpes ou de la ratatouille. Si le service est bon et le plat est goûteux, je me régale.",
+          medium: "Je préfère les restaurants simples avec des produits frais. Dans une brasserie, je peux commander un plat salé et un dessert sucré, par exemple des crêpes ou un fondant au chocolat. Pour moi, le service est aussi important.",
+          challenge: "La restauration est intéressante parce qu'il existe beaucoup de types de restaurants: le bistrot, la brasserie, le fast-food ou le restaurant gastronomique. Personnellement, j'aime les plats faits maison comme la ratatouille ou les crêpes. Si le serveur est agréable et si le plat n'est pas trop épicé, je me régale."
+        }
+      }
+    ],
+    drills: [["Commande", "Dis: je voudrais..., s'il vous plaît."], ["Goûts", "Utilise salé, sucré, épicé."], ["Avis", "Donne une critique positive."]]
+  },
+  {
+    id: "ticket-8",
+    number: 8,
+    title: "L'information",
+    page: "билет 8",
+    topic: "информация, предпочтения, критика",
+    vocabGroups: [
+      { title: "Information", words: ["les médias", "le journalisme numérique", "le reportage", "le documentaire", "la plateforme", "le(s) point(s) de vue"] },
+      { title: "S'informer", words: ["être au courant de", "regarder les nouvelles", "regarder les informations", "s'abonner à un média", "suivre l'actualité"] },
+      { title: "Critique", words: ["les fausses nouvelles", "les infox", "commenter", "diffuser une information"] }
+    ],
+    tickets: [
+      {
+        title: "Билет 8 · Как я узнаю новости",
+        question: "L'information, s'informer, vos préférences: faire une critique positive ou négative.",
+        goal: "Скажи, где ты узнаёшь новости, что нравится и что не нравится.",
+        required: ["les médias", "suivre l'actualité", "regarder les nouvelles", "la plateforme", "les fausses nouvelles", "le(s) point(s) de vue"],
+        plan: ["Где узнаёшь новости", "Что предпочитаешь", "Плюс", "Минус"],
+        answers: {
+          easy: "Je m'informe surtout sur Internet. Je regarde les nouvelles sur une plateforme et je suis l'actualité sur les réseaux sociaux. C'est pratique, mais il faut faire attention aux fausses nouvelles.",
+          medium: "Pour être au courant de l'actualité, j'utilise les médias en ligne. J'aime les reportages et les documentaires parce qu'ils expliquent un sujet. Mais je pense qu'il faut comparer plusieurs points de vue.",
+          challenge: "Je préfère m'informer avec le journalisme numérique parce que c'est rapide et accessible. Je peux regarder les informations, lire un article ou voir un reportage. Le point positif, c'est la diversité des médias. Le point négatif, c'est le risque des infox, donc il faut vérifier les sources."
+        }
+      }
+    ],
+    drills: [["Source", "Dis où tu lis/regardes les infos."], ["Critique", "Un point positif, un point négatif."], ["Sécurité", "Parle des fausses nouvelles."]]
+  },
+  {
+    id: "ticket-9",
+    number: 9,
+    title: "La presse et la télévision",
+    page: "билет 9",
+    topic: "пресса, телевидение, рубрики",
+    vocabGroups: [
+      { title: "Presse", words: ["l'article (m.)", "le journal", "le magazine", "la revue", "la presse en ligne", "la presse papier", "le titre"] },
+      { title: "Télévision", words: ["la chaîne", "le direct", "l'émission (f.)", "le journal télévisé", "le JT", "la télé(vision)"] },
+      { title: "Rubriques", words: ["actualité internationale", "culture", "écologie", "économie", "météo", "politique", "sport"] }
+    ],
+    tickets: [
+      {
+        title: "Билет 9 · Пресса и ТВ",
+        question: "La presse écrite, la télévision, les rubriques: faire une critique positive ou négative.",
+        goal: "Сравни прессу и телевидение простыми фразами.",
+        required: ["la presse en ligne", "la presse papier", "le journal télévisé", "l'émission (f.)", "culture", "sport"],
+        plan: ["Что читаешь", "Что смотришь", "Любимые рубрики", "Критика"],
+        answers: {
+          easy: "Je lis parfois la presse en ligne. Je regarde aussi le journal télévisé. J'aime les rubriques culture, sport et météo. La presse papier est intéressante, mais je l'utilise moins.",
+          medium: "La presse en ligne est pratique parce qu'on peut lire un article rapidement. La télévision est utile pour voir le direct ou une émission. Je préfère les sujets de culture et de sport, mais je n'aime pas les informations trop longues.",
+          challenge: "À mon avis, la presse écrite et la télévision ont des avantages différents. La presse en ligne permet de choisir un article et de lire tranquillement. La télévision donne des images et le direct. Le point négatif, c'est que certaines émissions simplifient trop les sujets."
+        }
+      }
+    ],
+    drills: [["Comparer", "Utilise: plus pratique que, moins long que."], ["Rubriques", "Choisis trois rubriques."], ["Critique", "Ajoute: j'aime / je n'aime pas."]]
+  },
+  {
+    id: "ticket-10",
+    number: 10,
+    title: "Les médias et les réseaux sociaux",
+    page: "билет 10",
+    topic: "медиа, соцсети, актуальность",
+    vocabGroups: [
+      { title: "Médias", words: ["les médias", "le documentaire", "le reportage", "la diffusion en direct", "la diffusion en streaming", "publier un article"] },
+      { title: "Réseaux sociaux", words: ["être connecté(e)", "être sur un réseau social", "ouvrir un compte sur un réseau social", "poster des photos", "regarder une vidéo", "suivre quelqu'un sur un réseau"] },
+      { title: "Communication", words: ["commenter", "diffuser une information", "un moyen de communication", "sensibiliser un public"] }
+    ],
+    tickets: [
+      {
+        title: "Билет 10 · Медиа и соцсети",
+        question: "Les médias, les BD, les actualités, les réseaux sociaux : faire une critique positive ou négative.",
+        goal: "Расскажи про соцсети и медиа: плюсы и минусы.",
+        required: ["les médias", "être sur un réseau social", "poster des photos", "regarder une vidéo", "commenter", "diffuser une information"],
+        plan: ["Какими медиа пользуешься", "Что делаешь в соцсетях", "Плюс", "Минус"],
+        answers: {
+          easy: "Je suis sur les réseaux sociaux. Je regarde des vidéos, je suis des personnes et parfois je commente. C'est un moyen de communication pratique, mais il ne faut pas passer trop de temps en ligne.",
+          medium: "Les médias et les réseaux sociaux permettent de diffuser une information très vite. On peut regarder une vidéo, poster des photos et suivre l'actualité. Le point négatif, c'est qu'il y a parfois des fausses nouvelles.",
+          challenge: "Aujourd'hui, les médias et les réseaux sociaux sont très présents. Ils aident à communiquer, à sensibiliser un public et à suivre l'actualité. Mais je pense qu'il faut rester prudent: il ne faut pas tout croire, et il faut limiter le temps passé sur les plateformes."
+        }
+      }
+    ],
+    drills: [["Actions", "Utilise trois verbes: regarder, poster, commenter."], ["Critique", "Un avantage, un danger."], ["Temps", "Dis combien de temps tu passes en ligne."]]
+  },
+  {
+    id: "ticket-11",
+    number: 11,
+    title: "Les podcasts",
+    page: "билет 11",
+    topic: "подкасты, радио, коммуникация",
+    vocabGroups: [
+      { title: "Podcasts", words: ["écouter des podcasts", "l'épisode (m.)", "les contenus sonores (m.)", "l'écoute (f.)", "la voix", "raconter"] },
+      { title: "Radio", words: ["l'auditeur", "l'auditrice", "l'émission de radio (f.)", "le programme de radio"] },
+      { title: "Communication", words: ["un outil de communication", "un moyen de communication", "transmettre des connaissances", "sensibiliser un public"] }
+    ],
+    tickets: [
+      {
+        title: "Билет 11 · Подкасты и коммуникация",
+        question: "Les podcasts, la communication: faire une critique positive ou négative.",
+        goal: "Объясни, зачем слушать подкасты и чем они полезны.",
+        required: ["écouter des podcasts", "l'épisode (m.)", "la voix", "raconter", "un moyen de communication", "transmettre des connaissances"],
+        plan: ["Слушаешь ли подкасты", "Когда слушаешь", "Польза", "Минус"],
+        answers: {
+          easy: "J'écoute parfois des podcasts. J'aime la voix du journaliste et les histoires qu'il raconte. Pour moi, c'est un bon moyen de communication et d'apprentissage.",
+          medium: "Les podcasts sont pratiques parce qu'on peut les écouter dans les transports ou à la maison. Un épisode peut transmettre des connaissances sur un sujet simple. Le point négatif, c'est que parfois c'est trop long.",
+          challenge: "Je trouve que les podcasts sont un outil de communication très moderne. Avec la voix, on peut raconter une histoire, expliquer une idée et sensibiliser un public. Personnellement, j'aime les épisodes courts, parce qu'ils sont faciles à écouter et utiles pour apprendre."
+        }
+      }
+    ],
+    drills: [["Préférence", "Dis quel sujet t'intéresse."], ["Moment", "Dis quand tu écoutes."], ["Critique", "Court ou long? utile ou inutile?"]]
+  },
+  {
+    id: "ticket-12",
+    number: 12,
+    title: "Le sommeil",
+    page: "билет 12",
+    topic: "сон, причины, мнение",
+    vocabGroups: [
+      { title: "Sommeil", words: ["le bâillement", "la fatigue physique", "manquer de sommeil", "le repos", "le réveil", "s'endormir", "se réveiller", "la sieste"] },
+      { title: "Corps", words: ["le dos", "le cou", "la tête", "la respiration", "le rythme cardiaque", "relâcher ses muscles"] },
+      { title: "Habitudes", words: ["adopter de bonnes habitudes", "récupérer", "reposé(e)", "se sentir léger, légère", "s'étirer", "se lever"] }
+    ],
+    tickets: [
+      {
+        title: "Билет 12 · Сон",
+        question: "Le sommeil (bon, mauvais, les raisons) : exprimer son point de vue.",
+        goal: "Расскажи, почему сон важен и что делать, если плохо спишь.",
+        required: ["manquer de sommeil", "le réveil", "s'endormir", "se réveiller", "le repos", "récupérer"],
+        plan: ["Мнение о сне", "Причины плохого сна", "Последствия", "Советы"],
+        answers: {
+          easy: "Le sommeil est très important. Quand je manque de sommeil, je suis fatigué au réveil. Pour mieux dormir, il faut s'endormir plus tôt, éviter le téléphone et bien se reposer.",
+          medium: "À mon avis, un bon sommeil aide à récupérer. Si je me couche tard, je me réveille fatigué et j'ai parfois mal au cou ou au dos. Pour mieux dormir, je respire calmement et je relâche mes muscles.",
+          challenge: "Je pense que le sommeil influence beaucoup la santé. Quand une personne manque de sommeil, elle peut avoir de la fatigue physique, du stress et un mauvais rythme. Pour bien récupérer, il faut adopter de bonnes habitudes: se coucher plus tôt, éviter les écrans, respirer calmement et s'étirer au réveil."
+        }
+      }
+    ],
+    drills: [["Opinion", "Dis pourquoi le sommeil est important."], ["Causes", "Donne deux raisons du mauvais sommeil."], ["Conseils", "Donne trois conseils avec il faut."]]
+  }
+];
+
+const activeModules = examTickets;
+const savedModuleId = localStorage.getItem("moduleId");
+const initialModuleId = activeModules.some((module) => String(module.id) === savedModuleId) ? savedModuleId : activeModules[0].id;
 
 const translations = {
   "le bras": "рука",
@@ -971,6 +1296,56 @@ Object.assign(translations, {
   "avancer comme une tortue": "двигаться очень медленно"
 });
 
+Object.assign(translations, {
+  "la technologie": "технология",
+  "l'innovation (f.)": "инновация",
+  "l'invention (f.)": "изобретение",
+  "le robot": "робот",
+  "l'intelligence artificielle (f.)": "искусственный интеллект",
+  "le logiciel": "программа, ПО",
+  "l'imprimante 3D (f.)": "3D-принтер",
+  "la tablette": "планшет",
+  "l'appareil (m.)": "устройство, аппарат",
+  "le smartphone": "смартфон",
+  "la batterie": "батарея, аккумулятор",
+  "l'écran (m.)": "экран",
+  "le clavier": "клавиатура",
+  "la souris": "мышь",
+  "l'ordinateur": "компьютер",
+  "l'application (f.)": "приложение",
+  "utile": "полезный",
+  "pratique": "удобный, практичный",
+  "indispensable": "необходимый",
+  "automatique": "автоматический",
+  "autonome": "автономный",
+  "fonctionner": "работать, функционировать",
+  "être en panne": "быть сломанным",
+  "tomber en panne": "сломаться",
+  "se soigner": "лечиться",
+  "les transports": "транспорт",
+  "le bistrot": "бистро",
+  "la brasserie": "ресторан-пивная, брассери",
+  "le fast-food": "фастфуд",
+  "le restaurant gastronomique": "гастрономический ресторан",
+  "le restaurant végan": "веганский ресторан",
+  "le traiteur": "кейтеринг, кулинария",
+  "commander des plats": "заказывать блюда",
+  "sur place": "на месте",
+  "à emporter": "с собой",
+  "le serveur": "официант",
+  "la serveuse": "официантка",
+  "le service": "обслуживание",
+  "le pourboire": "чаевые",
+  "les crêpes (f.)": "блины, крепы",
+  "la ratatouille": "рататуй",
+  "le couscous": "кускус",
+  "le fondant au chocolat": "шоколадный фондан",
+  "épicé(e)": "пряный, острый",
+  "salé(e)": "солёный",
+  "sucré(e)": "сладкий",
+  "se régaler": "наслаждаться едой"
+});
+
 const simpleTicketsByUnit = {
   8: [
     {
@@ -1168,7 +1543,7 @@ const generatedPreview = document.querySelector("#generatedPreview");
 const generatedCount = document.querySelector("#generatedCount");
 
 function currentModule() {
-  return activeModules.find((module) => module.id === state.moduleId) || activeModules[0];
+  return activeModules.find((module) => String(module.id) === String(state.moduleId)) || activeModules[0];
 }
 
 function allVocab(module) {
@@ -1360,8 +1735,8 @@ function saveState() {
 
 function renderModules() {
   moduleList.innerHTML = activeModules.map((module) => `
-    <button class="module-button ${module.id === state.moduleId ? "active" : ""}" data-module="${module.id}">
-      <span class="module-number">${module.id}</span>
+    <button class="module-button ${String(module.id) === String(state.moduleId) ? "active" : ""}" data-module="${module.id}">
+      <span class="module-number">${module.number || module.id}</span>
       <span>
         <span class="module-name">${module.title}</span>
         <span class="module-topic">${module.topic}</span>
@@ -1378,9 +1753,9 @@ function renderCompleteness() {
     const translationPercent = words.length ? Math.round((translated / words.length) * 100) : 0;
     const ticketCount = module.tickets?.length || 0;
     return `
-      <div class="coverage-item ${module.id === state.moduleId ? "active" : ""}">
-        <span>Юнит ${module.id}</span>
-        <strong>${translationPercent}% · ${ticketCount} бил.</strong>
+      <div class="coverage-item ${String(module.id) === String(state.moduleId) ? "active" : ""}">
+        <span>Билет ${module.number || module.id}</span>
+        <strong>${translationPercent}% · ${words.length} слов</strong>
       </div>
     `;
   }).join("");
@@ -1392,7 +1767,7 @@ function renderPractice() {
   const ticket = tickets[state.questionIndex % tickets.length];
   const question = ticket ? ticket.question : module.questions[state.questionIndex % module.questions.length];
   moduleTitle.textContent = module.title;
-  moduleMeta.textContent = `Юнит ${module.id} · стр. ${module.page}`;
+  moduleMeta.textContent = `Билет ${module.number || module.id} · ${module.page}`;
   ticketQuestion.textContent = question;
   ticketGoal.textContent = ticket ? ticket.goal : `Используй минимум 5 слов из темы: ${module.topic}.`;
   modelAnswer.textContent = ticket ? ticket.answers[state.level] : module.answers[state.level];
@@ -1473,7 +1848,7 @@ function addXp(amount) {
 moduleList.addEventListener("click", (event) => {
   const button = event.target.closest("[data-module]");
   if (!button) return;
-  state.moduleId = Number(button.dataset.module);
+  state.moduleId = button.dataset.module;
   state.questionIndex = 0;
   state.cardIndex = 0;
   state.cardFlipped = false;
@@ -1512,7 +1887,7 @@ document.querySelector("#resetBtn").addEventListener("click", () => {
   clearInterval(state.timer);
   state.xp = 0;
   state.questionIndex = 0;
-  state.moduleId = 7;
+  state.moduleId = activeModules[0].id;
   state.cardIndex = 0;
   state.cardFlipped = false;
   builder.value = "";
