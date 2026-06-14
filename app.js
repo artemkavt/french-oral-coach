@@ -1747,6 +1747,7 @@ function renderModules() {
 }
 
 function renderCompleteness() {
+  if (!coverageList) return;
   coverageList.innerHTML = activeModules.map((module) => {
     const words = allVocab(module);
     const translated = words.filter((word) => translations[word]).length;
