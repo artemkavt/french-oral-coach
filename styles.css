@@ -687,6 +687,42 @@ button {
   min-height: 360px;
 }
 
+.card-scope {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-self: center;
+  width: 100%;
+  max-width: 760px;
+  padding: 8px;
+  border-radius: 8px;
+  background: #eef4f3;
+}
+
+.scope-tab {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 900;
+}
+
+.scope-tab.active {
+  background: #ffffff;
+  color: var(--ink);
+  box-shadow: 0 6px 18px rgba(23, 31, 48, 0.12);
+}
+
+.card-reward {
+  margin-left: auto;
+  color: var(--green-dark);
+  font-size: 13px;
+  font-weight: 900;
+}
+
 .card-controls {
   display: grid;
   grid-template-columns: 1fr 1fr;

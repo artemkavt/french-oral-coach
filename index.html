@@ -123,6 +123,11 @@
                 <h3>Тренировка карточек</h3>
                 <span id="cardProgress" class="pill soft">1 / 1</span>
               </div>
+              <div class="card-scope" role="tablist" aria-label="Набор слов">
+                <button class="scope-tab active" data-scope="ticket">Этот билет</button>
+                <button class="scope-tab" data-scope="all">Все слова</button>
+                <span id="cardReward" class="card-reward">Знаю +5 XP · Не знаю +1 XP</span>
+              </div>
               <button id="flashcard" class="flashcard large" type="button">
                 <span id="cardLabel">Французский</span>
                 <strong id="cardFront">le sommeil</strong>
@@ -133,6 +138,7 @@
                 <button id="flipCardBtn" class="secondary-button">Перевернуть</button>
                 <button id="knownCardBtn" class="primary-button">Знаю</button>
               </div>
+              <button id="speakCardBtn" class="secondary-button wide-button">Прослушать слово</button>
               <button id="nextCardBtn" class="text-button wide-button">Следующая без оценки</button>
             </article>
 

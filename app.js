@@ -1493,6 +1493,7 @@ const state = {
   xp: Number(localStorage.getItem("xp")) || 0,
   answerHidden: localStorage.getItem("answerHidden") === "true",
   cardIndex: Number(localStorage.getItem("cardIndex")) || 0,
+  cardScope: localStorage.getItem("cardScope") || "ticket",
   cardFlipped: false,
   cardStats: JSON.parse(localStorage.getItem("cardStats") || "{}"),
   timer: null,
@@ -1528,8 +1529,10 @@ const cardBack = document.querySelector("#cardBack");
 const cardProgress = document.querySelector("#cardProgress");
 const flipCardBtn = document.querySelector("#flipCardBtn");
 const nextCardBtn = document.querySelector("#nextCardBtn");
+const speakCardBtn = document.querySelector("#speakCardBtn");
 const knownCardBtn = document.querySelector("#knownCardBtn");
 const wrongCardBtn = document.querySelector("#wrongCardBtn");
+const scopeTabs = document.querySelectorAll(".scope-tab");
 const knownPercent = document.querySelector("#knownPercent");
 const knownCount = document.querySelector("#knownCount");
 const wrongCount = document.querySelector("#wrongCount");
@@ -1553,6 +1556,31 @@ function allVocab(module) {
   return module.vocab || [];
 }
 
+function uniqueWords(words) {
+  return [...new Set(words)];
+}
+
+function allExamVocab() {
+  return uniqueWords(activeModules.flatMap((module) => allVocab(module)));
+}
+
+function cardDeck() {
+  if (state.cardScope === "all") {
+    return {
+      id: "all-vocab",
+      label: "Все слова",
+      words: allExamVocab()
+    };
+  }
+
+  const module = currentModule();
+  return {
+    id: module.id,
+    label: `Билет ${module.number || module.id}`,
+    words: allVocab(module)
+  };
+}
+
 function translationFor(word) {
   return translations[word] || "перевод скоро добавим";
 }
@@ -1566,15 +1594,16 @@ function statFor(moduleId, word) {
 }
 
 function updateCardStat(isRight) {
-  const module = currentModule();
-  const words = allVocab(module);
+  const deck = cardDeck();
+  const words = deck.words;
   const word = words[state.cardIndex];
-  const key = statKey(module.id, word);
+  const key = statKey(deck.id, word);
   const current = state.cardStats[key] || { right: 0, wrong: 0 };
   state.cardStats[key] = {
     right: current.right + (isRight ? 1 : 0),
     wrong: current.wrong + (isRight ? 0 : 1)
   };
+  addXp(isRight ? 5 : 1);
   saveState();
   nextFlashcard();
 }
@@ -1614,25 +1643,26 @@ function renderVocab(module) {
 }
 
 function renderFlashcard() {
-  const words = allVocab(currentModule());
+  const deck = cardDeck();
+  const words = deck.words;
   if (!words.length) return;
-  const module = currentModule();
   state.cardIndex = Math.min(state.cardIndex, words.length - 1);
   const word = words[state.cardIndex];
   const translation = translationFor(word);
-  const stat = statFor(module.id, word);
-  cardProgress.textContent = `${state.cardIndex + 1} / ${words.length}`;
+  const stat = statFor(deck.id, word);
+  cardProgress.textContent = `${deck.label} · ${state.cardIndex + 1} / ${words.length}`;
   cardLabel.textContent = state.cardFlipped ? "Перевод" : "Французский";
   cardFront.textContent = state.cardFlipped ? translation : word;
   cardBack.textContent = state.cardFlipped ? `${word} · верно ${stat.right}, ошибок ${stat.wrong}` : "Нажми, чтобы увидеть перевод";
   flashcard.classList.toggle("flipped", state.cardFlipped);
+  scopeTabs.forEach((button) => button.classList.toggle("active", button.dataset.scope === state.cardScope));
   renderCardStats();
 }
 
 function renderCardStats() {
-  const module = currentModule();
-  const words = allVocab(module);
-  const stats = words.map((word) => ({ word, ...statFor(module.id, word) }));
+  const deck = cardDeck();
+  const words = deck.words;
+  const stats = words.map((word) => ({ word, ...statFor(deck.id, word) }));
   const known = stats.filter((item) => item.right > 0 && item.wrong === 0).length;
   const wrongTotal = stats.reduce((sum, item) => sum + item.wrong, 0);
   const untouched = stats.filter((item) => item.right === 0 && item.wrong === 0).length;
@@ -1665,7 +1695,7 @@ function renderView() {
 }
 
 function nextFlashcard() {
-  const words = allVocab(currentModule());
+  const words = cardDeck().words;
   state.cardIndex = (state.cardIndex + 1) % words.length;
   state.cardFlipped = false;
   saveState();
@@ -1730,6 +1760,7 @@ function saveState() {
   localStorage.setItem("xp", String(state.xp));
   localStorage.setItem("answerHidden", String(state.answerHidden));
   localStorage.setItem("cardIndex", String(state.cardIndex));
+  localStorage.setItem("cardScope", state.cardScope);
   localStorage.setItem("cardStats", JSON.stringify(state.cardStats));
 }
 
@@ -1846,6 +1877,19 @@ function addXp(amount) {
   renderProgress();
 }
 
+function speakCurrentCard() {
+  if (!("speechSynthesis" in window)) return;
+  const words = cardDeck().words;
+  const word = words[state.cardIndex];
+  if (!word) return;
+  const cleanWord = word.replace(/\s*\([^)]*\)/g, "");
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(cleanWord);
+  utterance.lang = "fr-FR";
+  utterance.rate = 0.85;
+  window.speechSynthesis.speak(utterance);
+}
+
 moduleList.addEventListener("click", (event) => {
   const button = event.target.closest("[data-module]");
   if (!button) return;
@@ -1864,6 +1908,16 @@ modeTabs.forEach((button) => {
     state.view = button.dataset.view;
     saveState();
     renderView();
+  });
+});
+
+scopeTabs.forEach((button) => {
+  button.addEventListener("click", () => {
+    state.cardScope = button.dataset.scope;
+    state.cardIndex = 0;
+    state.cardFlipped = false;
+    saveState();
+    renderFlashcard();
   });
 });
 
@@ -1947,12 +2001,13 @@ flipCardBtn.addEventListener("click", () => {
 nextCardBtn.addEventListener("click", () => {
   nextFlashcard();
 });
+speakCardBtn.addEventListener("click", speakCurrentCard);
 knownCardBtn.addEventListener("click", () => updateCardStat(true));
 wrongCardBtn.addEventListener("click", () => updateCardStat(false));
 weakWords.addEventListener("click", (event) => {
   const button = event.target.closest("[data-word]");
   if (!button) return;
-  const words = allVocab(currentModule());
+  const words = cardDeck().words;
   const index = words.indexOf(button.dataset.word);
   if (index >= 0) {
     state.cardIndex = index;
