@@ -80,7 +80,21 @@
               </div>
             </div>
             <button id="hideAnswerBtn" class="ghost-button">Скрыть пример</button>
-            <p id="modelAnswer" class="model-answer"></p>
+            <div class="answer-editor">
+              <label>
+                <span>Французский ответ</span>
+                <textarea id="modelAnswer" class="model-answer editable-answer" rows="6"></textarea>
+              </label>
+              <label>
+                <span>Перевод на русский</span>
+                <textarea id="answerTranslation" class="translation-answer" rows="4"></textarea>
+              </label>
+              <div class="answer-tools">
+                <button id="saveAnswerBtn" class="secondary-button" type="button">Сохранить правку</button>
+                <button id="translateToFrenchBtn" class="secondary-button" type="button">Русский → французский</button>
+                <button id="resetAnswerBtn" class="text-button" type="button">Вернуть пример</button>
+              </div>
+            </div>
             <div id="ticketPlan" class="ticket-plan"></div>
             <div class="speak-controls">
               <button id="startTimerBtn" class="primary-button">Начать говорить</button>

@@ -530,6 +530,51 @@ button {
   line-height: 1.55;
 }
 
+.answer-editor {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.answer-editor label {
+  display: grid;
+  gap: 7px;
+}
+
+.answer-editor label span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.editable-answer {
+  min-height: 210px;
+  margin: 0;
+}
+
+.translation-answer {
+  min-height: 120px;
+  background: #ffffff;
+}
+
+.editable-answer.is-hidden,
+.translation-answer.is-hidden {
+  color: transparent;
+  caret-color: transparent;
+  pointer-events: none;
+}
+
+.answer-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.answer-tools button {
+  min-height: 44px;
+}
+
 .model-answer.is-hidden {
   display: grid;
   place-items: center;

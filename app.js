@@ -828,6 +828,69 @@ const activeModules = examTickets;
 const savedModuleId = localStorage.getItem("moduleId");
 const initialModuleId = activeModules.some((module) => String(module.id) === savedModuleId) ? savedModuleId : activeModules[0].id;
 
+const answerTranslations = {
+  "ticket-1": {
+    easy: "По моему мнению, новые технологии очень полезны. В будущем будет больше роботов и искусственного интеллекта. Смартфон останется необходимым, потому что он помогает общаться и искать информацию.",
+    medium: "Я думаю, что новые технологии изменят повседневную жизнь. Например, роботы, приложения и искусственный интеллект станут более практичными. Эти предметы будут полезны для работы, учёбы и экономии времени.",
+    challenge: "В будущем технологические инновации будут повсюду. Робот сможет помогать дома, приложение сможет организовывать день, а искусственный интеллект сможет передавать знания. Но нужно будет использовать эти предметы умеренно, потому что технологии должны помогать людям, а не заменять человеческие отношения."
+  },
+  "ticket-2": {
+    easy: "Чтобы быть в хорошей форме, нужно иметь хорошие привычки. Нужно спать, отдыхать и нормально питаться. Если человек болен, нужно обратиться к врачу и следовать лечению.",
+    medium: "По моему мнению, здоровье зависит от ежедневных привычек. Отдых, спокойное дыхание и спорт помогают восстановиться. Но если есть температура или сильная боль, лучше обратиться к врачу.",
+    challenge: "Я думаю, что медицина важна, но личные привычки тоже имеют значение. Чтобы оставаться в хорошей форме, нужно достаточно спать, избегать стресса и находить время на восстановление. Когда проблема продолжается, нельзя ждать: нужно обратиться к врачу и выбрать подходящее лечение."
+  },
+  "ticket-3": {
+    easy: "Здравствуйте, мадам. Я плохо себя чувствую. У меня заложен нос, я кашляю и у меня небольшая температура. Вы можете посоветовать мне сироп или капли? Большое спасибо.",
+    medium: "Здравствуйте, я плохо себя чувствую уже два дня. У меня болит горло, заложен нос и кашель. Я хотел бы простое средство, чтобы облегчить боль. Вы советуете мне сироп?",
+    challenge: "Здравствуйте, мадам, я пришёл попросить у вас совет. Я плохо себя чувствую: у меня температура, заложен нос, сильный кашель и болит горло. Я хотел бы лёгкое лечение, например сироп или капли. Если это не пройдёт, я обращусь к врачу."
+  },
+  "ticket-4": {
+    easy: "Здравствуйте, доктор. У меня болит спина и шея. Я страдаю уже два дня. Я хотел бы узнать, как облегчить боль и какое лечение мне нужно принимать.",
+    medium: "Здравствуйте, доктор, я пришёл, потому что у меня болит голова, спина и шея. Боль не очень сильная, но она меня утомляет. Вы можете посоветовать мне лечение, чтобы снять напряжение?",
+    challenge: "Здравствуйте, доктор. Уже несколько дней я страдаю от боли в спине и шее. У меня также иногда болит голова. Я думаю, что это, возможно, из-за стресса или плохой позы. Я хотел бы совет, чтобы облегчить боль и избежать повторения."
+  },
+  "ticket-5": {
+    easy: "В случае срочной ситуации нужно позвонить по номеру экстренной помощи. Во время звонка нужно объяснить, где находится пострадавший. Затем скорая помощь или SAMU приезжает, чтобы помочь раненому.",
+    medium: "Если у человека серьёзная проблема, нужно сохранять спокойствие и звонить в экстренные службы. Нужно назвать адрес, объяснить симптомы и сказать, есть ли раненый. Потом SAMU или пожарные могут вмешаться.",
+    challenge: "По моему мнению, в экстренной ситуации нужно действовать быстро, но спокойно. Нужно позвонить по номеру экстренной помощи, описать ситуацию, адрес и состояние пострадавшего. Не нужно перемещать раненого, если это не необходимо. Затем приезжает скорая помощь, SAMU или пожарные."
+  },
+  "ticket-6": {
+    easy: "Я увидел аварию на улице. У пострадавшего болела нога. Я позвонил в экстренные службы. Скорая помощь, пожарные и полиция быстро приехали.",
+    medium: "Авария может произойти в транспорте или на улице. Если человек ранен, нужно позвонить в экстренные службы. Пожарные помогают пострадавшему, скорая отвозит его в больницу, а полиция организует движение.",
+    challenge: "Если я вижу аварию, я сохраняю спокойствие. Сначала я смотрю, ранен ли пострадавший и болит ли у него что-то. Затем я звоню в экстренные службы и называю адрес. Пожарные, полиция и скорая помощь могут вмешаться, чтобы защитить людей и облегчить состояние раненых."
+  },
+  "ticket-7": {
+    easy: "Мне нравится ходить в ресторан с друзьями. Я могу заказать блины или рататуй. Если обслуживание хорошее и блюдо вкусное, я наслаждаюсь едой.",
+    medium: "Я предпочитаю простые рестораны со свежими продуктами. В брассери я могу заказать солёное блюдо и сладкий десерт, например блины или шоколадный фондан. Для меня обслуживание тоже важно.",
+    challenge: "Ресторанная тема интересна, потому что существуют разные типы заведений: бистро, брассери, фастфуд или гастрономический ресторан. Лично мне нравятся домашние блюда, такие как рататуй или блины. Если официант приятный и блюдо не слишком острое, я наслаждаюсь едой."
+  },
+  "ticket-8": {
+    easy: "Я узнаю новости в основном в интернете. Я смотрю новости на платформе и слежу за актуальностью в социальных сетях. Это удобно, но нужно обращать внимание на фейковые новости.",
+    medium: "Чтобы быть в курсе новостей, я использую онлайн-медиа. Мне нравятся репортажи и документальные фильмы, потому что они объясняют тему. Но я думаю, что нужно сравнивать несколько точек зрения.",
+    challenge: "Я предпочитаю получать информацию через цифровую журналистику, потому что это быстро и доступно. Я могу смотреть новости, читать статью или смотреть репортаж. Положительная сторона — разнообразие медиа. Отрицательная сторона — риск фейков, поэтому нужно проверять источники."
+  },
+  "ticket-9": {
+    easy: "Я иногда читаю онлайн-прессу. Я также смотрю телевизионные новости. Мне нравятся рубрики культура, спорт и погода. Бумажная пресса интересная, но я использую её меньше.",
+    medium: "Онлайн-пресса удобна, потому что можно быстро прочитать статью. Телевидение полезно, чтобы смотреть прямой эфир или передачу. Я предпочитаю темы культуры и спорта, но не люблю слишком длинные новости.",
+    challenge: "По моему мнению, письменная пресса и телевидение имеют разные преимущества. Онлайн-пресса позволяет выбрать статью и спокойно читать. Телевидение даёт изображения и прямой эфир. Отрицательная сторона в том, что некоторые передачи слишком упрощают темы."
+  },
+  "ticket-10": {
+    easy: "Я есть в социальных сетях. Я смотрю видео, слежу за людьми и иногда комментирую. Это удобное средство коммуникации, но не нужно проводить слишком много времени онлайн.",
+    medium: "Медиа и социальные сети позволяют очень быстро распространять информацию. Можно смотреть видео, публиковать фотографии и следить за новостями. Отрицательная сторона в том, что иногда бывают фейковые новости.",
+    challenge: "Сегодня медиа и социальные сети очень присутствуют в жизни. Они помогают общаться, привлекать внимание публики и следить за новостями. Но я думаю, что нужно быть осторожным: нельзя всему верить, и нужно ограничивать время на платформах."
+  },
+  "ticket-11": {
+    easy: "Я иногда слушаю подкасты. Мне нравится голос журналиста и истории, которые он рассказывает. Для меня это хороший способ коммуникации и обучения.",
+    medium: "Подкасты удобны, потому что их можно слушать в транспорте или дома. Эпизод может передавать знания по простой теме. Отрицательная сторона в том, что иногда это слишком долго.",
+    challenge: "Я считаю, что подкасты — очень современный инструмент коммуникации. С помощью голоса можно рассказать историю, объяснить идею и привлечь внимание публики. Лично мне нравятся короткие эпизоды, потому что их легко слушать и они полезны для учёбы."
+  },
+  "ticket-12": {
+    easy: "Сон очень важен. Когда я недосыпаю, я устаю утром после пробуждения. Чтобы лучше спать, нужно засыпать раньше, избегать телефона и хорошо отдыхать.",
+    medium: "По моему мнению, хороший сон помогает восстановиться. Если я ложусь поздно, я просыпаюсь уставшим, и у меня иногда болит шея или спина. Чтобы лучше спать, я спокойно дышу и расслабляю мышцы.",
+    challenge: "Я думаю, что сон сильно влияет на здоровье. Когда человек недосыпает, у него может быть физическая усталость, стресс и плохой ритм. Чтобы хорошо восстановиться, нужно приобрести хорошие привычки: ложиться раньше, избегать экранов, спокойно дышать и потягиваться утром."
+  }
+};
+
 const translations = {
   "le bras": "рука",
   "le cerveau": "мозг",
@@ -1496,6 +1559,7 @@ const state = {
   cardScope: localStorage.getItem("cardScope") || "ticket",
   cardFlipped: false,
   cardStats: JSON.parse(localStorage.getItem("cardStats") || "{}"),
+  customAnswers: JSON.parse(localStorage.getItem("customAnswers") || "{}"),
   timer: null,
   remaining: 45
 };
@@ -1507,6 +1571,10 @@ const moduleMeta = document.querySelector("#moduleMeta");
 const ticketQuestion = document.querySelector("#ticketQuestion");
 const ticketGoal = document.querySelector("#ticketGoal");
 const modelAnswer = document.querySelector("#modelAnswer");
+const answerTranslation = document.querySelector("#answerTranslation");
+const saveAnswerBtn = document.querySelector("#saveAnswerBtn");
+const resetAnswerBtn = document.querySelector("#resetAnswerBtn");
+const translateToFrenchBtn = document.querySelector("#translateToFrenchBtn");
 const ticketPlan = document.querySelector("#ticketPlan");
 const vocabChips = document.querySelector("#vocabChips");
 const vocabCount = document.querySelector("#vocabCount");
@@ -1762,6 +1830,78 @@ function saveState() {
   localStorage.setItem("cardIndex", String(state.cardIndex));
   localStorage.setItem("cardScope", state.cardScope);
   localStorage.setItem("cardStats", JSON.stringify(state.cardStats));
+  localStorage.setItem("customAnswers", JSON.stringify(state.customAnswers));
+}
+
+function currentTicket() {
+  const module = currentModule();
+  const tickets = module.tickets || [];
+  return tickets[state.questionIndex % tickets.length];
+}
+
+function answerKey() {
+  const module = currentModule();
+  return `${module.id}::${state.questionIndex}::${state.level}`;
+}
+
+function modelFrenchAnswer() {
+  const module = currentModule();
+  const ticket = currentTicket();
+  return ticket ? ticket.answers[state.level] : module.answers[state.level];
+}
+
+function modelRussianAnswer() {
+  const module = currentModule();
+  return answerTranslations[module.id]?.[state.level] || "Перевод можно написать здесь своими словами.";
+}
+
+function currentAnswerRecord() {
+  const key = answerKey();
+  return state.customAnswers[key] || {
+    fr: modelFrenchAnswer(),
+    ru: modelRussianAnswer()
+  };
+}
+
+function frenchDraftFromRussian(text) {
+  const module = currentModule();
+  const ticket = currentTicket();
+  const clean = text.trim();
+  if (!clean) return modelFrenchAnswer();
+
+  const lower = clean.toLocaleLowerCase("ru");
+  const starts = {
+    "ticket-1": "À mon avis, les nouvelles technologies sont utiles.",
+    "ticket-2": "À mon avis, la santé est très importante.",
+    "ticket-3": "Bonjour, je ne me sens pas très bien.",
+    "ticket-4": "Bonjour docteur, je viens parce que j'ai un problème de santé.",
+    "ticket-5": "En cas d'urgence, il faut rester calme.",
+    "ticket-6": "J'ai vu un accident dans la rue.",
+    "ticket-7": "J'aime aller au restaurant avec mes amis.",
+    "ticket-8": "Je m'informe surtout sur Internet.",
+    "ticket-9": "Je lis parfois la presse en ligne et je regarde la télévision.",
+    "ticket-10": "J'utilise les médias et les réseaux sociaux.",
+    "ticket-11": "J'écoute parfois des podcasts.",
+    "ticket-12": "Le sommeil est très important pour la santé."
+  };
+  const phrases = [starts[module.id] || "À mon avis, c'est important."];
+
+  if (lower.includes("нрав")) phrases.push("J'aime ce sujet parce qu'il est utile pour moi.");
+  if (lower.includes("не нрав") || lower.includes("минус")) phrases.push("Mais il y a aussi des inconvénients.");
+  if (lower.includes("важ")) phrases.push("Je pense que c'est important dans la vie quotidienne.");
+  if (lower.includes("друг")) phrases.push("Je peux en parler avec mes amis.");
+  if (lower.includes("интернет") || lower.includes("соц")) phrases.push("J'utilise Internet et les réseaux sociaux.");
+  if (lower.includes("здоров") || lower.includes("бол")) phrases.push("Quand il y a un problème, il faut consulter un médecin.");
+  if (lower.includes("сон") || lower.includes("спать")) phrases.push("Pour mieux dormir, il faut se reposer et éviter les écrans.");
+  if (lower.includes("ресторан") || lower.includes("еда")) phrases.push("Je préfère les plats simples avec des produits frais.");
+  if (lower.includes("технолог")) phrases.push("Les technologies aident à communiquer et à chercher des informations.");
+
+  const required = ticket?.required?.slice(0, 4).join(", ");
+  if (required) {
+    phrases.push(`Je peux utiliser ces mots: ${required}.`);
+  }
+  phrases.push("Voilà mon point de vue.");
+  return uniqueWords(phrases).join(" ");
 }
 
 function renderModules() {
@@ -1802,8 +1942,11 @@ function renderPractice() {
   moduleMeta.textContent = `Билет ${module.number || module.id} · ${module.page}`;
   ticketQuestion.textContent = question;
   ticketGoal.textContent = ticket ? ticket.goal : `Используй минимум 5 слов из темы: ${module.topic}.`;
-  modelAnswer.textContent = ticket ? ticket.answers[state.level] : module.answers[state.level];
+  const answerRecord = currentAnswerRecord();
+  modelAnswer.value = answerRecord.fr;
+  answerTranslation.value = answerRecord.ru;
   modelAnswer.classList.toggle("is-hidden", state.answerHidden);
+  answerTranslation.classList.toggle("is-hidden", state.answerHidden);
   hideAnswerBtn.textContent = state.answerHidden ? "Показать пример" : "Скрыть пример";
   ticketPlan.innerHTML = ticket ? `
     <div class="ticket-title">${ticket.title}</div>
@@ -1890,6 +2033,14 @@ function speakCurrentCard() {
   window.speechSynthesis.speak(utterance);
 }
 
+function saveCurrentAnswer() {
+  state.customAnswers[answerKey()] = {
+    fr: modelAnswer.value.trim(),
+    ru: answerTranslation.value.trim()
+  };
+  saveState();
+}
+
 moduleList.addEventListener("click", (event) => {
   const button = event.target.closest("[data-module]");
   if (!button) return;
@@ -1967,6 +2118,18 @@ hideAnswerBtn.addEventListener("click", () => {
   state.answerHidden = !state.answerHidden;
   saveState();
   renderPractice();
+});
+saveAnswerBtn.addEventListener("click", saveCurrentAnswer);
+modelAnswer.addEventListener("input", saveCurrentAnswer);
+answerTranslation.addEventListener("input", saveCurrentAnswer);
+resetAnswerBtn.addEventListener("click", () => {
+  delete state.customAnswers[answerKey()];
+  saveState();
+  renderPractice();
+});
+translateToFrenchBtn.addEventListener("click", () => {
+  modelAnswer.value = frenchDraftFromRussian(answerTranslation.value);
+  saveCurrentAnswer();
 });
 document.querySelector("#copyBuilderBtn").addEventListener("click", async () => {
   await navigator.clipboard?.writeText(builder.value);
