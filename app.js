@@ -827,6 +827,7 @@ const examTickets = [
 const activeModules = examTickets;
 const savedModuleId = localStorage.getItem("moduleId");
 const initialModuleId = activeModules.some((module) => String(module.id) === savedModuleId) ? savedModuleId : activeModules[0].id;
+const ANSWER_CONTENT_VERSION = "long-v1";
 
 const answerTranslations = {
   "ticket-1": {
@@ -888,6 +889,57 @@ const answerTranslations = {
     easy: "Сон очень важен. Когда я недосыпаю, я устаю утром после пробуждения. Чтобы лучше спать, нужно засыпать раньше, избегать телефона и хорошо отдыхать.",
     medium: "По моему мнению, хороший сон помогает восстановиться. Если я ложусь поздно, я просыпаюсь уставшим, и у меня иногда болит шея или спина. Чтобы лучше спать, я спокойно дышу и расслабляю мышцы.",
     challenge: "Я думаю, что сон сильно влияет на здоровье. Когда человек недосыпает, у него может быть физическая усталость, стресс и плохой ритм. Чтобы хорошо восстановиться, нужно приобрести хорошие привычки: ложиться раньше, избегать экранов, спокойно дышать и потягиваться утром."
+  }
+};
+
+const answerExpansions = {
+  "ticket-1": {
+    fr: "Par exemple, ma grand-mère utilise déjà son téléphone pour appeler la famille. Elle ne comprend pas toujours les applications, mais elle trouve cela pratique. Dans mes études, j'utilise aussi Internet pour chercher des informations. Une bonne technologie doit être simple, utile et pas trop chère. Je pense qu'il faut que les gens gardent du temps pour parler en face à face (subjonctif: gardent). Si un robot aide une personne âgée, c'est positif. Mais si la technologie prend toute la place, c'est un problème.",
+    ru: "Например, моя бабушка уже использует телефон, чтобы звонить семье. Она не всегда понимает приложения, но считает это удобным. В учёбе я тоже использую интернет, чтобы искать информацию. Хорошая технология должна быть простой, полезной и не слишком дорогой. Я думаю, что людям нужно сохранять время для общения лицом к лицу (subjonctif: gardent). Если робот помогает пожилому человеку, это положительно. Но если технология занимает всё место, это проблема."
+  },
+  "ticket-2": {
+    fr: "Dans ma famille, on dit souvent que la santé est plus importante que le travail. Ma grand-mère conseille de bien dormir, de marcher et de manger une soupe chaude. Moi, j'essaie de boire plus d'eau et de bouger un peu chaque jour. Quand je suis stressé, je respire lentement et je fais une petite pause. Il faut que je fasse attention à mon rythme de vie (subjonctif: fasse). La médecine traditionnelle peut aider, mais il faut rester prudent. Pour moi, le plus important est d'écouter son corps.",
+    ru: "В моей семье часто говорят, что здоровье важнее работы. Моя бабушка советует хорошо спать, ходить пешком и есть горячий суп. Я стараюсь пить больше воды и немного двигаться каждый день. Когда я испытываю стресс, я медленно дышу и делаю небольшую паузу. Мне нужно следить за своим ритмом жизни (subjonctif: fasse). Традиционная медицина может помогать, но нужно быть осторожным. Для меня самое важное — слушать своё тело."
+  },
+  "ticket-3": {
+    fr: "À la pharmacie, je parle simplement parce que je ne suis pas médecin. Je dis où j'ai mal et depuis quand. Par exemple, je peux dire que j'ai le nez bouché depuis hier soir. Je peux aussi demander si le sirop se prend avant ou après le repas. Ma grand-mère préfère souvent les tisanes, mais moi je demande conseil au pharmacien. Il faut que le pharmacien comprenne bien mes symptômes (subjonctif: comprenne). Si la fièvre continue, je ne reste pas à la maison. Je prends rendez-vous avec un médecin.",
+    ru: "В аптеке я говорю просто, потому что я не врач. Я говорю, где у меня болит и с какого времени. Например, я могу сказать, что у меня заложен нос со вчерашнего вечера. Я также могу спросить, принимают ли сироп до еды или после еды. Моя бабушка часто предпочитает травяные чаи, но я спрашиваю совет у фармацевта. Нужно, чтобы фармацевт хорошо понял мои симптомы (subjonctif: comprenne). Если температура продолжается, я не остаюсь дома. Я записываюсь к врачу."
+  },
+  "ticket-4": {
+    fr: "Chez le médecin, il faut expliquer les symptômes avec précision. Je peux dire si la douleur est forte ou légère. Je peux aussi montrer la partie du corps qui me fait mal. Par exemple, après une longue journée devant l'ordinateur, j'ai parfois mal au dos. Ma grand-mère dit qu'il faut se lever et s'étirer plus souvent. Il faut que le médecin puisse comprendre la situation (subjonctif: puisse). Ensuite, il peut donner un traitement ou conseiller du repos. Je trouve important de ne pas attendre trop longtemps.",
+    ru: "У врача нужно объяснять симптомы точно. Я могу сказать, сильная боль или лёгкая. Я также могу показать часть тела, которая болит. Например, после долгого дня за компьютером у меня иногда болит спина. Моя бабушка говорит, что нужно чаще вставать и потягиваться. Нужно, чтобы врач смог понять ситуацию (subjonctif: puisse). Затем он может назначить лечение или посоветовать отдых. Я считаю важным не ждать слишком долго."
+  },
+  "ticket-5": {
+    fr: "Dans une urgence, chaque minute peut être importante. Il faut donner une adresse claire et parler calmement. Si je ne connais pas la rue, je peux décrire un magasin, un arrêt ou un bâtiment près de moi. Je ne dois pas paniquer, parce que la victime a besoin d'aide. Il faut que les secours arrivent vite (subjonctif: arrivent). Les pompiers, le SAMU et l'ambulance ont chacun un rôle. Je pense aussi qu'il faut apprendre les gestes simples de premiers secours. Cela peut sauver une vie.",
+    ru: "В срочной ситуации каждая минута может быть важной. Нужно назвать чёткий адрес и говорить спокойно. Если я не знаю улицу, я могу описать магазин, остановку или здание рядом со мной. Я не должен паниковать, потому что пострадавшему нужна помощь. Нужно, чтобы службы помощи приехали быстро (subjonctif: arrivent). Пожарные, SAMU и скорая помощь имеют свою роль. Я также думаю, что нужно учить простые действия первой помощи. Это может спасти жизнь."
+  },
+  "ticket-6": {
+    fr: "Un accident peut être très stressant pour tout le monde. Si je suis témoin, je dois regarder la situation avant d'agir. Je peux demander à une autre personne d'appeler les urgences. Si la victime parle, je peux lui dire de rester calme. Ma grand-mère dit toujours qu'il ne faut pas jouer au héros. Il faut que je reste prudent (subjonctif: reste). Après l'arrivée de la police ou des pompiers, je peux expliquer ce que j'ai vu. Cela aide les services à comprendre l'accident.",
+    ru: "Авария может быть очень стрессовой для всех. Если я свидетель, я должен посмотреть на ситуацию перед тем, как действовать. Я могу попросить другого человека позвонить в экстренные службы. Если пострадавший говорит, я могу сказать ему сохранять спокойствие. Моя бабушка всегда говорит, что не нужно играть в героя. Нужно, чтобы я оставался осторожным (subjonctif: reste). После приезда полиции или пожарных я могу объяснить, что видел. Это помогает службам понять аварию."
+  },
+  "ticket-7": {
+    fr: "Quand je vais au restaurant, je regarde d'abord le menu. J'aime les plats simples, parce qu'ils sont plus faciles à comprendre et à choisir. Avec ma famille, on commande parfois des crêpes ou un plat chaud. Ma grand-mère cuisine très bien, donc je compare souvent avec sa cuisine. Si le serveur est poli, l'ambiance devient plus agréable. Il faut que le service soit rapide mais aussi sympathique (subjonctif: soit). Je préfère les produits frais et les plats pas trop gras. À la fin, je peux laisser un petit pourboire.",
+    ru: "Когда я иду в ресторан, я сначала смотрю меню. Мне нравятся простые блюда, потому что их легче понять и выбрать. С семьёй мы иногда заказываем блины или горячее блюдо. Моя бабушка очень хорошо готовит, поэтому я часто сравниваю с её кухней. Если официант вежливый, атмосфера становится приятнее. Нужно, чтобы обслуживание было быстрым, но также доброжелательным (subjonctif: soit). Я предпочитаю свежие продукты и не слишком жирные блюда. В конце я могу оставить небольшие чаевые."
+  },
+  "ticket-8": {
+    fr: "Pour m'informer, je regarde surtout les médias en ligne. C'est rapide, mais parfois il y a trop d'informations. Je préfère lire un petit article clair plutôt qu'un texte très long. Je peux aussi regarder un reportage pour mieux comprendre un sujet. Ma grand-mère regarde encore les informations à la télévision. Il faut que les journalistes vérifient les sources (subjonctif: vérifient). Sinon, les fausses nouvelles peuvent circuler très vite. Pour moi, il est important de comparer plusieurs points de vue.",
+    ru: "Чтобы узнавать новости, я чаще всего смотрю онлайн-медиа. Это быстро, но иногда информации слишком много. Я предпочитаю читать небольшую понятную статью, а не очень длинный текст. Я также могу посмотреть репортаж, чтобы лучше понять тему. Моя бабушка всё ещё смотрит новости по телевизору. Нужно, чтобы журналисты проверяли источники (subjonctif: vérifient). Иначе фейковые новости могут распространяться очень быстро. Для меня важно сравнивать несколько точек зрения."
+  },
+  "ticket-9": {
+    fr: "La presse et la télévision ne donnent pas toujours la même impression. Dans un journal, on peut relire une phrase et réfléchir. À la télévision, les images aident à comprendre plus vite. J'aime les rubriques culture, météo et société. Mon père regarde parfois le sport, surtout les grands matchs. Il faut que les médias présentent les informations clairement (subjonctif: présentent). Je n'aime pas quand une émission parle trop fort ou trop vite. Pour apprendre le français, regarder un JT court peut être utile.",
+    ru: "Пресса и телевидение не всегда создают одинаковое впечатление. В газете можно перечитать фразу и подумать. На телевидении изображения помогают быстрее понять. Мне нравятся рубрики культура, погода и общество. Мой отец иногда смотрит спорт, особенно большие матчи. Нужно, чтобы медиа представляли информацию понятно (subjonctif: présentent). Мне не нравится, когда передача говорит слишком громко или слишком быстро. Для изучения французского короткий выпуск новостей может быть полезен."
+  },
+  "ticket-10": {
+    fr: "Les réseaux sociaux font partie de la vie quotidienne. Je peux écrire à mes amis, regarder une vidéo ou lire une nouvelle. Mais je sais que tout n'est pas vrai sur Internet. Il faut choisir les comptes que l'on suit. Parfois, je ferme l'application pour me concentrer sur mes études. Il faut que je limite mon temps en ligne (subjonctif: limite). Les médias peuvent sensibiliser un public, par exemple sur l'écologie ou la santé. Pour moi, le plus important est de rester critique.",
+    ru: "Социальные сети являются частью повседневной жизни. Я могу написать друзьям, посмотреть видео или прочитать новость. Но я знаю, что не всё правда в интернете. Нужно выбирать аккаунты, на которые подписываешься. Иногда я закрываю приложение, чтобы сосредоточиться на учёбе. Мне нужно ограничивать своё время онлайн (subjonctif: limite). Медиа могут привлекать внимание публики, например к экологии или здоровью. Для меня самое важное — оставаться критичным."
+  },
+  "ticket-11": {
+    fr: "Les podcasts sont pratiques parce qu'on peut les écouter partout. Je peux écouter un épisode dans le métro ou pendant une promenade. La voix est importante, parce qu'elle rend le sujet plus vivant. J'aime quand une personne raconte une histoire simple. Ma grand-mère préfère la radio, mais le principe est un peu le même. Il faut que le podcast soit clair et pas trop long (subjonctif: soit). Pour apprendre le français, je peux écouter plusieurs fois le même épisode. Cela aide à mémoriser les mots.",
+    ru: "Подкасты удобны, потому что их можно слушать везде. Я могу слушать эпизод в метро или во время прогулки. Голос важен, потому что он делает тему более живой. Мне нравится, когда человек рассказывает простую историю. Моя бабушка предпочитает радио, но принцип немного похожий. Нужно, чтобы подкаст был понятным и не слишком длинным (subjonctif: soit). Для изучения французского я могу слушать один и тот же эпизод несколько раз. Это помогает запоминать слова."
+  },
+  "ticket-12": {
+    fr: "Le sommeil influence l'humeur, le travail et les études. Si je dors mal, je suis moins attentif pendant la journée. Le soir, j'essaie de poser mon téléphone loin du lit. Ma grand-mère dit qu'une tisane chaude aide parfois à se détendre. Je pense aussi que la respiration calme est utile. Il faut que je me couche plus tôt pendant la semaine (subjonctif: couche). Le matin, je peux m'étirer pour réveiller le corps. Un bon rythme donne plus d'énergie.",
+    ru: "Сон влияет на настроение, работу и учёбу. Если я плохо сплю, я менее внимателен днём. Вечером я стараюсь класть телефон далеко от кровати. Моя бабушка говорит, что горячий травяной чай иногда помогает расслабиться. Я также думаю, что спокойное дыхание полезно. Нужно, чтобы я ложился раньше в течение недели (subjonctif: couche). Утром я могу потянуться, чтобы разбудить тело. Хороший ритм даёт больше энергии."
   }
 };
 
@@ -1844,18 +1896,22 @@ function currentTicket() {
 
 function answerKey() {
   const module = currentModule();
-  return `${module.id}::${state.questionIndex}::${state.level}`;
+  return `${ANSWER_CONTENT_VERSION}::${module.id}::${state.questionIndex}::${state.level}`;
 }
 
 function modelFrenchAnswer() {
   const module = currentModule();
   const ticket = currentTicket();
-  return ticket ? ticket.answers[state.level] : module.answers[state.level];
+  const base = ticket ? ticket.answers[state.level] : module.answers[state.level];
+  const expansion = answerExpansions[module.id]?.fr;
+  return expansion ? `${base} ${expansion}` : base;
 }
 
 function modelRussianAnswer() {
   const module = currentModule();
-  return answerTranslations[module.id]?.[state.level] || "Перевод можно написать здесь своими словами.";
+  const base = answerTranslations[module.id]?.[state.level] || "Перевод можно написать здесь своими словами.";
+  const expansion = answerExpansions[module.id]?.ru;
+  return expansion ? `${base} ${expansion}` : base;
 }
 
 function currentAnswerRecord() {
