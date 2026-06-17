@@ -824,6 +824,31 @@ const examTickets = [
   }
 ];
 
+const ticketVerbGroups = {
+  "ticket-1": ["utiliser", "imaginer", "décrire", "chercher des informations", "communiquer", "fonctionner", "aider", "gagner du temps", "allumer", "éteindre"],
+  "ticket-2": ["se sentir", "adopter", "consulter", "suivre un traitement", "se reposer", "récupérer", "respirer", "éviter le stress", "prendre soin de", "faire attention à"],
+  "ticket-3": ["demander conseil", "expliquer ses symptômes", "tousser", "prendre un médicament", "conseiller", "calmer la douleur", "se soigner", "passer à la pharmacie", "avoir besoin de", "aller mieux"],
+  "ticket-4": ["avoir mal à", "souffrir", "montrer", "expliquer", "soulager", "prendre rendez-vous", "examiner", "prescrire", "se lever", "s'étirer"],
+  "ticket-5": ["appeler les urgences", "donner l'adresse", "décrire la situation", "rester calme", "aider la victime", "arriver vite", "intervenir", "protéger", "attendre les secours", "sauver une vie"],
+  "ticket-6": ["voir un accident", "appeler", "demander de l'aide", "garder son calme", "regarder la situation", "expliquer ce qu'on a vu", "emmener à l'hôpital", "organiser la circulation", "se blesser", "témoigner"],
+  "ticket-7": ["commander", "choisir", "goûter", "manger sur place", "prendre à emporter", "laisser un pourboire", "se régaler", "cuisiner", "servir", "préférer"],
+  "ticket-8": ["s'informer", "suivre l'actualité", "regarder les nouvelles", "lire un article", "vérifier les sources", "comparer les points de vue", "publier", "diffuser", "être au courant de", "faire attention à"],
+  "ticket-9": ["lire la presse", "regarder la télévision", "choisir une rubrique", "comparer", "présenter les informations", "relire", "réfléchir", "suivre le sport", "voir le direct", "critiquer"],
+  "ticket-10": ["utiliser les réseaux sociaux", "poster des photos", "regarder une vidéo", "commenter", "suivre quelqu'un", "ouvrir un compte", "fermer une application", "limiter son temps", "diffuser une information", "sensibiliser"],
+  "ticket-11": ["écouter un podcast", "raconter", "transmettre des connaissances", "expliquer une idée", "sensibiliser un public", "écouter plusieurs fois", "mémoriser", "choisir un épisode", "apprendre", "préférer"],
+  "ticket-12": ["dormir", "s'endormir", "se réveiller", "se reposer", "récupérer", "se coucher", "éviter les écrans", "respirer calmement", "relâcher ses muscles", "s'étirer"]
+};
+
+examTickets.forEach((ticket) => {
+  const verbs = ticketVerbGroups[ticket.id] || [];
+  if (verbs.length) {
+    ticket.vocabGroups.push({
+      title: "Глаголы для ответа",
+      words: verbs
+    });
+  }
+});
+
 const activeModules = examTickets;
 const savedModuleId = localStorage.getItem("moduleId");
 const initialModuleId = activeModules.some((module) => String(module.id) === savedModuleId) ? savedModuleId : activeModules[0].id;
@@ -1409,6 +1434,103 @@ Object.assign(translations, {
   "se coucher avec les poules": "ложиться очень рано",
   "poser un lapin": "не прийти на встречу",
   "avancer comme une tortue": "двигаться очень медленно"
+});
+
+Object.assign(translations, {
+  "utiliser": "использовать",
+  "imaginer": "представлять, воображать",
+  "décrire": "описывать",
+  "chercher des informations": "искать информацию",
+  "communiquer": "общаться",
+  "aider": "помогать",
+  "gagner du temps": "экономить время",
+  "allumer": "включать",
+  "éteindre": "выключать",
+  "se sentir": "чувствовать себя",
+  "adopter": "принимать, приобретать",
+  "consulter": "обращаться к врачу, консультироваться",
+  "suivre un traitement": "следовать лечению",
+  "se reposer": "отдыхать",
+  "respirer": "дышать",
+  "éviter le stress": "избегать стресса",
+  "prendre soin de": "заботиться о",
+  "faire attention à": "обращать внимание на",
+  "demander conseil": "просить совет",
+  "expliquer ses symptômes": "объяснять симптомы",
+  "tousser": "кашлять",
+  "prendre un médicament": "принимать лекарство",
+  "conseiller": "советовать",
+  "calmer la douleur": "успокаивать боль",
+  "passer à la pharmacie": "зайти в аптеку",
+  "avoir besoin de": "нуждаться в",
+  "aller mieux": "чувствовать себя лучше",
+  "avoir mal à": "иметь боль в, болеть",
+  "expliquer": "объяснять",
+  "montrer": "показывать",
+  "prendre rendez-vous": "записаться на приём",
+  "examiner": "осматривать",
+  "prescrire": "выписывать, назначать",
+  "appeler les urgences": "звонить в экстренные службы",
+  "donner l'adresse": "дать адрес",
+  "décrire la situation": "описать ситуацию",
+  "rester calme": "сохранять спокойствие",
+  "aider la victime": "помочь пострадавшему",
+  "arriver vite": "быстро приехать",
+  "intervenir": "вмешиваться, оказывать помощь",
+  "protéger": "защищать",
+  "attendre les secours": "ждать спасателей/помощь",
+  "sauver une vie": "спасти жизнь",
+  "voir un accident": "увидеть аварию",
+  "appeler": "звонить",
+  "demander de l'aide": "просить помощи",
+  "garder son calme": "сохранять спокойствие",
+  "regarder la situation": "осмотреть ситуацию",
+  "expliquer ce qu'on a vu": "объяснить, что увидел",
+  "emmener à l'hôpital": "отвезти в больницу",
+  "organiser la circulation": "организовать движение",
+  "se blesser": "пораниться, получить травму",
+  "témoigner": "давать показания, свидетельствовать",
+  "commander": "заказывать",
+  "choisir": "выбирать",
+  "goûter": "пробовать на вкус",
+  "manger sur place": "есть на месте",
+  "prendre à emporter": "брать с собой",
+  "laisser un pourboire": "оставлять чаевые",
+  "cuisiner": "готовить",
+  "servir": "подавать",
+  "préférer": "предпочитать",
+  "s'informer": "получать информацию",
+  "lire un article": "читать статью",
+  "vérifier les sources": "проверять источники",
+  "comparer les points de vue": "сравнивать точки зрения",
+  "publier": "публиковать",
+  "diffuser": "распространять",
+  "lire la presse": "читать прессу",
+  "regarder la télévision": "смотреть телевизор",
+  "choisir une rubrique": "выбрать рубрику",
+  "comparer": "сравнивать",
+  "présenter les informations": "представлять информацию",
+  "relire": "перечитывать",
+  "réfléchir": "думать, размышлять",
+  "suivre le sport": "следить за спортом",
+  "voir le direct": "смотреть прямой эфир",
+  "critiquer": "критиковать, оценивать",
+  "utiliser les réseaux sociaux": "использовать социальные сети",
+  "suivre quelqu'un": "следить за кем-то, быть подписанным",
+  "ouvrir un compte": "открыть аккаунт",
+  "fermer une application": "закрыть приложение",
+  "limiter son temps": "ограничивать своё время",
+  "écouter un podcast": "слушать подкаст",
+  "expliquer une idée": "объяснять идею",
+  "sensibiliser": "привлекать внимание, повышать осведомлённость",
+  "écouter plusieurs fois": "слушать несколько раз",
+  "mémoriser": "запоминать",
+  "choisir un épisode": "выбрать эпизод",
+  "apprendre": "учить, узнавать",
+  "dormir": "спать",
+  "se coucher": "ложиться спать",
+  "éviter les écrans": "избегать экранов",
+  "respirer calmement": "дышать спокойно"
 });
 
 Object.assign(translations, {
