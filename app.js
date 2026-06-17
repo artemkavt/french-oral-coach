@@ -1576,6 +1576,7 @@ const saveAnswerBtn = document.querySelector("#saveAnswerBtn");
 const resetAnswerBtn = document.querySelector("#resetAnswerBtn");
 const translateToRussianBtn = document.querySelector("#translateToRussianBtn");
 const translateToFrenchBtn = document.querySelector("#translateToFrenchBtn");
+const openGoogleTranslateBtn = document.querySelector("#openGoogleTranslateBtn");
 const translateStatus = document.querySelector("#translateStatus");
 const ticketPlan = document.querySelector("#ticketPlan");
 const vocabChips = document.querySelector("#vocabChips");
@@ -1918,16 +1919,19 @@ async function translateText(text, sourceLang, targetLang) {
   }
 
   const params = new URLSearchParams({
-    q: clean,
-    langpair: `${sourceLang}|${targetLang}`
+    client: "gtx",
+    sl: sourceLang,
+    tl: targetLang,
+    dt: "t",
+    q: clean
   });
-  const response = await fetch(`https://api.mymemory.translated.net/get?${params.toString()}`);
+  const response = await fetch(`https://translate.googleapis.com/translate_a/single?${params.toString()}`);
   if (!response.ok) {
     throw new Error("Переводчик сейчас не отвечает.");
   }
 
   const data = await response.json();
-  const translated = data?.responseData?.translatedText?.trim();
+  const translated = data?.[0]?.map((part) => part?.[0] || "").join("").trim();
   if (!translated) {
     throw new Error("Переводчик не вернул текст.");
   }
@@ -1953,6 +1957,19 @@ async function translateAnswer(direction) {
   } finally {
     button.disabled = false;
   }
+}
+
+function openGoogleTranslate() {
+  const hasRussianFocus = document.activeElement === answerTranslation;
+  const sourceText = hasRussianFocus ? answerTranslation.value : modelAnswer.value;
+  const sourceLang = hasRussianFocus ? "ru" : "fr";
+  const targetLang = hasRussianFocus ? "fr" : "ru";
+  const url = new URL("https://translate.google.com/");
+  url.searchParams.set("sl", sourceLang);
+  url.searchParams.set("tl", targetLang);
+  url.searchParams.set("text", sourceText.trim());
+  url.searchParams.set("op", "translate");
+  window.open(url.toString(), "_blank", "noopener,noreferrer");
 }
 
 function renderModules() {
@@ -2181,6 +2198,7 @@ resetAnswerBtn.addEventListener("click", () => {
 });
 translateToRussianBtn.addEventListener("click", () => translateAnswer("fr-ru"));
 translateToFrenchBtn.addEventListener("click", () => translateAnswer("ru-fr"));
+openGoogleTranslateBtn.addEventListener("click", openGoogleTranslate);
 document.querySelector("#copyBuilderBtn").addEventListener("click", async () => {
   await navigator.clipboard?.writeText(builder.value);
 });
