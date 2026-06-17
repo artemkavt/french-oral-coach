@@ -1574,7 +1574,9 @@ const modelAnswer = document.querySelector("#modelAnswer");
 const answerTranslation = document.querySelector("#answerTranslation");
 const saveAnswerBtn = document.querySelector("#saveAnswerBtn");
 const resetAnswerBtn = document.querySelector("#resetAnswerBtn");
+const translateToRussianBtn = document.querySelector("#translateToRussianBtn");
 const translateToFrenchBtn = document.querySelector("#translateToFrenchBtn");
+const translateStatus = document.querySelector("#translateStatus");
 const ticketPlan = document.querySelector("#ticketPlan");
 const vocabChips = document.querySelector("#vocabChips");
 const vocabCount = document.querySelector("#vocabCount");
@@ -1904,6 +1906,55 @@ function frenchDraftFromRussian(text) {
   return uniqueWords(phrases).join(" ");
 }
 
+function setTranslateStatus(message, isError = false) {
+  translateStatus.textContent = message;
+  translateStatus.classList.toggle("is-error", isError);
+}
+
+async function translateText(text, sourceLang, targetLang) {
+  const clean = text.trim();
+  if (!clean) {
+    throw new Error("Сначала напиши текст для перевода.");
+  }
+
+  const params = new URLSearchParams({
+    q: clean,
+    langpair: `${sourceLang}|${targetLang}`
+  });
+  const response = await fetch(`https://api.mymemory.translated.net/get?${params.toString()}`);
+  if (!response.ok) {
+    throw new Error("Переводчик сейчас не отвечает.");
+  }
+
+  const data = await response.json();
+  const translated = data?.responseData?.translatedText?.trim();
+  if (!translated) {
+    throw new Error("Переводчик не вернул текст.");
+  }
+  return translated;
+}
+
+async function translateAnswer(direction) {
+  const isRuToFr = direction === "ru-fr";
+  const source = isRuToFr ? answerTranslation.value : modelAnswer.value;
+  const target = isRuToFr ? modelAnswer : answerTranslation;
+  const sourceLang = isRuToFr ? "ru" : "fr";
+  const targetLang = isRuToFr ? "fr" : "ru";
+  const button = isRuToFr ? translateToFrenchBtn : translateToRussianBtn;
+
+  button.disabled = true;
+  setTranslateStatus("Перевожу...");
+  try {
+    target.value = await translateText(source, sourceLang, targetLang);
+    saveCurrentAnswer();
+    setTranslateStatus("Перевод готов.");
+  } catch (error) {
+    setTranslateStatus(`${error.message} Текст не изменён.`, true);
+  } finally {
+    button.disabled = false;
+  }
+}
+
 function renderModules() {
   moduleList.innerHTML = activeModules.map((module) => `
     <button class="module-button ${String(module.id) === String(state.moduleId) ? "active" : ""}" data-module="${module.id}">
@@ -2125,12 +2176,11 @@ answerTranslation.addEventListener("input", saveCurrentAnswer);
 resetAnswerBtn.addEventListener("click", () => {
   delete state.customAnswers[answerKey()];
   saveState();
+  setTranslateStatus("");
   renderPractice();
 });
-translateToFrenchBtn.addEventListener("click", () => {
-  modelAnswer.value = frenchDraftFromRussian(answerTranslation.value);
-  saveCurrentAnswer();
-});
+translateToRussianBtn.addEventListener("click", () => translateAnswer("fr-ru"));
+translateToFrenchBtn.addEventListener("click", () => translateAnswer("ru-fr"));
 document.querySelector("#copyBuilderBtn").addEventListener("click", async () => {
   await navigator.clipboard?.writeText(builder.value);
 });

@@ -575,6 +575,22 @@ button {
   min-height: 44px;
 }
 
+.answer-tools button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.translate-status {
+  min-height: 20px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.translate-status.is-error {
+  color: #b74438;
+}
+
 .model-answer.is-hidden {
   display: grid;
   place-items: center;
