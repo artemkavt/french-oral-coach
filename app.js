@@ -852,7 +852,7 @@ examTickets.forEach((ticket) => {
 const activeModules = examTickets;
 const savedModuleId = localStorage.getItem("moduleId");
 const initialModuleId = activeModules.some((module) => String(module.id) === savedModuleId) ? savedModuleId : activeModules[0].id;
-const ANSWER_CONTENT_VERSION = "long-v1";
+const ANSWER_CONTENT_VERSION = "long-v2";
 
 const answerTranslations = {
   "ticket-1": {
@@ -1751,6 +1751,7 @@ const resetAnswerBtn = document.querySelector("#resetAnswerBtn");
 const translateToRussianBtn = document.querySelector("#translateToRussianBtn");
 const translateToFrenchBtn = document.querySelector("#translateToFrenchBtn");
 const openGoogleTranslateBtn = document.querySelector("#openGoogleTranslateBtn");
+const longAnswerBtn = document.querySelector("#longAnswerBtn");
 const translateStatus = document.querySelector("#translateStatus");
 const ticketPlan = document.querySelector("#ticketPlan");
 const vocabChips = document.querySelector("#vocabChips");
@@ -2287,6 +2288,14 @@ function saveCurrentAnswer() {
   saveState();
 }
 
+function useLongAnswer() {
+  modelAnswer.value = modelFrenchAnswer();
+  answerTranslation.value = modelRussianAnswer();
+  saveCurrentAnswer();
+  setTranslateStatus("Поставил длинную версию ответа.");
+}
+
+
 moduleList.addEventListener("click", (event) => {
   const button = event.target.closest("[data-module]");
   if (!button) return;
@@ -2377,6 +2386,7 @@ resetAnswerBtn.addEventListener("click", () => {
 translateToRussianBtn.addEventListener("click", () => translateAnswer("fr-ru"));
 translateToFrenchBtn.addEventListener("click", () => translateAnswer("ru-fr"));
 openGoogleTranslateBtn.addEventListener("click", openGoogleTranslate);
+longAnswerBtn.addEventListener("click", useLongAnswer);
 document.querySelector("#copyBuilderBtn").addEventListener("click", async () => {
   await navigator.clipboard?.writeText(builder.value);
 });
